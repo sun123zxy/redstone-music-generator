@@ -1,12 +1,13 @@
 import copy
 from mine import *
-from .direction import *
+from myUtils.direction import *
+from myUtils.echo import *
 
 class LocalAxis:
     """Local Axis"""
     
     def __init__(self, mc, origin, fwd):
-        mc.postToChat("LocalAxis building...")
+        echo("-----LocalAxis-----")
         self.origin = origin
         self.fwd = fwd
         self.back = -self.fwd
@@ -14,10 +15,11 @@ class LocalAxis:
         self.right = -self.left
         self.up = Vec3(0, 1, 0)
         self.down = -self.up
-        mc.postToChat("Origin: " + str(self.origin))
-        mc.postToChat("Forward: " + str(self.fwd))
-        mc.postToChat("Left: " + str(self.left))
-        mc.postToChat("LocalAxis builded!")
+        echo("Origin: " + str(self.origin))
+        echo("Forward: " + str(self.fwd))
+        echo("Left: " + str(self.left))
+        echo("LocalAxis builded!")
+        echo("----------")
     
     def Vec3L(self, t0, t1 = None, t2 = None):
         """localVec3, usage: Vec3L(x,y,z) or Vec3L(vec3)"""
