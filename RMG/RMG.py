@@ -1,9 +1,8 @@
-import copy
 import mido
-import binarySearch
 from mine import *
-from LocalAxis import *
-from direction import *
+from myUtils import binarySearch
+from myUtils.LocalAxis import *
+from myUtils.direction import *
 
 class RMGGenInfo:
     """RMG.generate() will use this"""

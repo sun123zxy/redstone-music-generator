@@ -1,6 +1,6 @@
 import copy
-from direction import *
 from mine import *
+from .direction import *
 
 class LocalAxis:
     """Local Axis"""

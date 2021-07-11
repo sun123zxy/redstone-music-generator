@@ -1,4 +1,4 @@
-from mine import *
+from mcpi.vec3 import *
 
 NORTH = 0
 EAST  = 1
