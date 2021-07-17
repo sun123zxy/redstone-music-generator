@@ -1,5 +1,5 @@
 import mido
-from myUtils.echo import *
+from myUtils.echo import echo
 
 class MIDIHandler:
     def __init__(self, midiPath):

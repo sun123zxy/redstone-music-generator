@@ -1,7 +1,7 @@
 import copy
 from mine import *
 from myUtils.direction import *
-from myUtils.echo import *
+from myUtils.echo import echo
 
 class LocalAxis:
     """Local Axis"""

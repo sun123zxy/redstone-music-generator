@@ -1,6 +1,8 @@
 from mcpi.minecraft import Minecraft
-def echo(text, mc = None):
+
+echo_mc = None
+def echo(text):
     """output logs in both python console and minecraft console"""
     print(text)
-    if not mc == None:
+    if not echo_mc == None:
         echo(text)
