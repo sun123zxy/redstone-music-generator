@@ -1,4 +1,4 @@
 """
 entry point
 """
-import RMGTest.test
+import sample.advancing
