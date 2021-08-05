@@ -1,10 +1,14 @@
+"""
+sample script: advancing-styled redstone music
+choose command block (with lkrb realpiano resourcepack) or noteblock as you like
+"""
 from myUtils.vecStepList import vecStepList
 from mine import *
 from myUtils.LocalAxis import *
 from myUtils.direction import *
 from RMG.MIDIHandler import *
 from RMG.RMG import *
-from RMG.SingleCB import *
+from RMG.SingleBlock import *
 from myUtils import echo
 from myUtils.echo import echo
 
@@ -12,10 +16,15 @@ mc = Minecraft()
 echo.echo_mc = mc
 axis = getPlayerFwdAxis(mc)
 # ---Binding Plugins for RMG---
-pos = AdvancingPosGen(); cmd = LkrbCmdGen()
-singleCB = SingleCB(mc, axis, pos.genPos, cmd.genCmd)
+pos = AdvancingPosGen()
+
+# CHOOSE COMMAND BLOCK OR NOTEBLOCK HERE
+cmd = LkrbBlockGen()
+# cmd = NoteBlockGen()
+
+singleBlock = SingleBlock(mc, axis, pos.genPos, cmd.genBlock)
 rmg = RMG(MIDIHandler("sample/spark.mid"))
-rmg.noteEvent.append(singleCB.onNote)
+rmg.noteEvent.append(singleBlock.onNote)
 # ---Config & Generating---
 pos.unitBeat   = 1
 pos.partPoses  = vecStepList(Vec3(2, 0, 0), Vec3(2, 0, 0), 8)

@@ -1,17 +1,17 @@
 from .RMG import *
 from myUtils.vecStepList import *
 
-class SingleCB(IMcAxis):
-    """generate single command block for a note."""
+class SingleBlock(IMcAxis):
+    """for each note generate a single block with NBT."""
 
-    def __init__(self, mc, axis, posDele=None, cmdDele=None):
+    def __init__(self, mc, axis, posDele=None, blockDele=None):
         """
-        :param posDele: function
-        :param cmdDele: function
+        :param posDele: function return Vec3
+        :param blockDele: function return (blockId, nbt)
         """
         super().__init__(mc, axis)
         self.posDele = posDele
-        self.cmdDele = cmdDele
+        self.blockDele = blockDele
 
     def onNote(self, sender, beat, count, note, velocity):
         pos = self.posDele(sender=self,
@@ -19,18 +19,15 @@ class SingleCB(IMcAxis):
                            count=count,
                            note=note,
                            velocity=velocity)
-        self.mc.setBlockWithNBT(self.axis.Vec3L(pos), block.COMMAND_BLOCK, '',
-            '{Command: "' +
-                self.cmdDele(sender=self,
-                             beat=beat,
-                             count=count,
-                             note=note,
-                             velocity=velocity)
-            + '"}'
-        )
+        block, nbt = self.blockDele(sender=self,
+                                    beat=beat,
+                                    count=count,
+                                    note=note,
+                                    velocity=velocity)
+        self.mc.setBlockWithNBT(self.axis.Vec3L(pos), block, '', nbt)
 
 class AdvancingPosGen():
-    """A position generator which suits advancing-structured redstone music project"""
+    """a position generator which suits advancing-styled redstone music project"""
     def __init__(self,  unitBeat    = 1,
                         partPoses   = vecStepList(Vec3(2, 0, 0), Vec3(2, 0, 0), 4),
                         unitDlt     = Vec3(0, 0, 3),
@@ -59,8 +56,22 @@ class AdvancingPosGen():
         pos = self.offset + self.partPoses[div] * self.facing + self.unitDlt * unit + self.countPoses[count]
         return pos
 
-class LkrbCmdGen():
+class NoteBlockGen():
+    """
+    basic noteblock generator
+    good old days
+    """
+    def genBlock(self, sender, beat, count, note, velocity):
+        note = ((note - 54) % 24 + 24) % 24
+        nbt = '{note: ' + str(note) + '}'
+        return block.NOTEBLOCK, nbt
+class LkrbBlockGen():
+    """
+    command block generator for realpiano
+    (a sound resourcepack made by lkrb. see http://lkrb.net/blog/54.html for more information)
+    """
     def __init__(self, force = "fff"):
         self.force = force
-    def genCmd(self, sender, beat, count, note, velocity):
-        return '/execute @a ~ ~ ~ playsound lkrb.piano.p' + str(note) + self.force + ' record @p ~ ~ ~'
+    def genBlock(self, sender, beat, count, note, velocity):
+        nbt = '{Command: "/execute @a ~ ~ ~ playsound lkrb.piano.p' + str(note) + self.force + ' record @p ~ ~ ~"}'
+        return block.COMMAND_BLOCK, nbt
