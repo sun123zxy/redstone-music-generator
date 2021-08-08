@@ -1,9 +1,9 @@
 from mcpi.vec3 import *
 
-NORTH = 0
-EAST  = 1
-SOUTH = 2
-WEST  = 3
+SOUTH = 0
+WEST  = 1
+NORTH = 2
+EAST  = 3
 
 def direction(vec):
     """axis unit vector -> NESW"""

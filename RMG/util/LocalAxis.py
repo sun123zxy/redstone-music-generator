@@ -1,23 +1,23 @@
 import copy
 from mine import *
-from myUtils.direction import *
-from myUtils.echo import echo
+from .direction import *
+from .echo import echo
 
 class LocalAxis:
-    """Local Axis"""
+    """Local Axis, left-handed system"""
     
     def __init__(self, mc, origin, fwd):
         echo("-----LocalAxis-----")
         self.origin = origin
         self.fwd = fwd
         self.back = -self.fwd
-        self.left = copy.deepcopy(self.fwd); self.left.rotateLeft()
-        self.right = -self.left
+        self.right = copy.deepcopy(self.fwd); self.right.rotateRight()
+        self.left = -self.right
         self.up = Vec3(0, 1, 0)
         self.down = -self.up
         echo("Origin: " + str(self.origin))
         echo("Forward: " + str(self.fwd))
-        echo("Left: " + str(self.left))
+        echo("Right: " + str(self.right))
         echo("LocalAxis builded!")
         echo("----------")
     
@@ -27,7 +27,7 @@ class LocalAxis:
             vec = t0
         else:
             vec = Vec3(t0, t1, t2)
-        return self.origin + self.left * vec.x + self.up * vec.y + self.fwd * vec.z
+        return self.origin + self.right * vec.x + self.up * vec.y + self.fwd * vec.z
 
 def getPlayerFwdAxis(mc):
     pos = mc.player.getTilePos()
