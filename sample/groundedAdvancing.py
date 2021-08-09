@@ -3,8 +3,8 @@ sample script: grounded advancing-styled redstone music
 choose command block (lkrb realpiano resourcepack) or noteblock or ground only
 choose sample configurations
 """
-from RMG.util.vecStepList import vecStepList
 from mine import *
+from RMG.util.vecStepList import vecStepList
 from RMG.util.LocalAxis import *
 from RMG.util.direction import *
 from RMG.MIDIHandler import *
@@ -36,7 +36,7 @@ gadv.partBlock = block.REDSTONE_LAMP_INACTIVE
 gadv.offset = Vec3(0,0,0)
 gadv.countPoses = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)]
 
-cmd.force = "fff"
+cmd.force = "fff" # not needed if cmd is not LkrbBlockGen 
 
 # CHOOSE A CONFIGURATION
 gadv.partDelay = 1

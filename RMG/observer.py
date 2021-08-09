@@ -173,7 +173,7 @@ class GroundedAdvancing():
         self._countPoses = self._apg.countPoses = value
 
     def __init__(self, mc, axis, blockDele, baseBlock = block.STONE,
-                                            partBlock = block.COBBLESTONE,
+                                            partBlock = block.DIRT,
                                             partDelay = 1,
                                             unitBeat    = 1,
                                             unitPart    = 4,
