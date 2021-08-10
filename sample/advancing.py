@@ -28,8 +28,10 @@ singleBlock = SingleBlock(mc, axis, pos.genPos, cmd.genBlock)
 rmg = RMG(MIDIHandler("sample/spark.mid"))
 rmg.noteEvent.append(singleBlock.onNote)
 
-# ---Config & Generating---
-
+# ---Configuring---
+pos.countPoses  = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)]
+pos.magnet = False
+cmd.force = "fff"
 # CHOOSE A SAMPLE CONFIGURATION
 pos.unitBeat   = 1
 pos.partPoses  = vecStepList(Vec3(2, 0, 0), Vec3(2, 0, 0), 8)
@@ -41,9 +43,8 @@ pos.partPoses  = vecStepList(Vec3(2, 0, 0), Vec3(2, 0, 0), 12)
 pos.unitDlt    = Vec3(0, 0, 4)
 pos.offset     = Vec3(0, 0, 3)
 """
-pos.countPoses  = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)]
 
-cmd.force = "fff"
+# ---Generating---
 
 rmg.staBeat = 0 * 4
 rmg.endBeat = 7 * 4

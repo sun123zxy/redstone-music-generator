@@ -20,7 +20,8 @@ class AdvancingPosGen():
                         unitDlt     = Vec3(0, 0, 3),
                         offset      = Vec3(0, 0, 2),
                         facing      = -1,
-                        countPoses  = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)]):
+                        countPoses  = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)],
+                        magnet = False):
         """
         :param unitBeat: how many beats will a unit contain. Should be a fraction if needed.
         :param partPoses: for each part set a delta position (every beat is devided into len(partPoses) parts)
@@ -28,6 +29,7 @@ class AdvancingPosGen():
         :param offset: global offset to Vec3L(0, 0, 0)
         :param facing: -1 = left, 1 = right, 0 = middle (special)
         :param countPoses: multiple delta positions for multiple notes on a same time point
+        :param magnet: find the nearest valid position to place the note when a note cannot fit precisely
         """
         self.unitBeat   = unitBeat
         self.partPoses  = partPoses
@@ -35,15 +37,20 @@ class AdvancingPosGen():
         self.offset     = offset
         self.facing     = facing
         self.countPoses = countPoses
+        self.magnet = magnet
     def genPos(self, sender, beat, count, note, velocity):
         unitPart = len(self.partPoses)
         tFrac = beat * unitPart / self.unitBeat
-        if(tFrac.numerator % tFrac.denominator != 0): 
-            echo("Error in class AdvancingPosGen function genPos(): \n"
-               + "    cannot find a valid position to place the note. \n"
-               + "    beat * unitPart / unitBeat is not an integer")
-            exit()
-        t = int(tFrac)
+        t = 0
+        if(self.magnet):
+            t = round(tFrac)
+        else:
+            if tFrac.numerator % tFrac.denominator != 0: 
+                echo("Error in class AdvancingPosGen function genPos(): \n"
+                   + "    cannot find a valid position to place the note. \n"
+                   + "    beat * unitPart / unitBeat is not an integer")
+                exit()
+            t = int(tFrac)
         unit = floor(t / unitPart)
         div  = t % unitPart
         pos = self.offset + self.partPoses[div] * self.facing + self.unitDlt * unit + self.countPoses[count]
@@ -172,6 +179,13 @@ class GroundedAdvancing():
     def countPoses(self, value):
         self._countPoses = self._apg.countPoses = value
 
+    @property
+    def magnet(self):
+        return self._apg.magnet
+    @magnet.setter
+    def magnet(self, value):
+        self._apg.magnet = value
+
     def __init__(self, mc, axis, blockDele, baseBlock = block.STONE,
                                             partBlock = block.DIRT,
                                             partDelay = 1,
@@ -180,7 +194,8 @@ class GroundedAdvancing():
                                             unitDltFwd  = 3,
                                             offset      = Vec3(0, 0, 0),
                                             facing      = -1,
-                                            countPoses  = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)]):
+                                            countPoses  = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)],
+                                            magnet = False):
         """
         :param blockDele: a blockGen() return Block
         :param baseBlock: block A used to constuct the ground
@@ -192,6 +207,7 @@ class GroundedAdvancing():
         :param offset: global offset to Vec3L(0, 0, 0)
         :param facing: -1 = left, 1 = right, 0 = middle (special)
         :param countPoses: multiple delta positions for multiple notes on a same time point
+        :param magnet: find the nearest valid position to place the note when a note cannot fit precisely
         """
         self.blockDele = blockDele
         self.partDelay = partDelay
@@ -210,6 +226,8 @@ class GroundedAdvancing():
 
         self.facing     = facing
         self.countPoses = countPoses
+
+        self.magnet = magnet
 
     def onNote(self, sender, beat, count, note, velocity):
         self._singleBlock.onNote(sender, beat, count, note, velocity)

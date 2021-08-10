@@ -1,4 +1,4 @@
 """
 entry point
 """
-import sample.groundedAdvancing
+import sample.quickstart

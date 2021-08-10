@@ -35,6 +35,7 @@ gadv.partBlock = block.REDSTONE_LAMP_INACTIVE
 
 gadv.offset = Vec3(0,0,0)
 gadv.countPoses = [Vec3(0, 1, 0), Vec3(0, 0, -1), Vec3(0, 0, 1)]
+gadv.magnet = False
 
 cmd.force = "fff" # not needed if cmd is not LkrbBlockGen 
 

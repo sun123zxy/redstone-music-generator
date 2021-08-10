@@ -17,20 +17,26 @@ The project is developed under Minecraft Java Edition 1.12.2, Python 3.8.3 and [
 
 ## Quickstart
 
-In `main.py`:
+1. In `main.py`:
 
-```python
-"""
-entry point
-"""
-import sample.quickstart
-```
+   ```python
+   """
+   entry point
+   """
+   import sample.quickstart
+   ```
 
-This will run `sample/quickstart.py` via `main.py` as an entry point.
+   It will execute `sample/quickstart.py` via `main.py` as an entry point.
+   
+2. Create a new world in Minecraft.
 
-Then create a new world in Minecraft, execute `/py main.py` in the console. Enjoy the music!
+3. Execute `python main.py`. Or you can execute `/py main.py` in your Minecraft console.
+
+4. Enjoy the music!
 
 ## Further Instructions
+
+`MIDIHandler` will show lots of useful information of the MIDI file when being initialized. Suggest having a look at them before generating.
 
 The project presets various redstone music styles. In `sample/` directory, there are sample scripts which show the usage of them.
 
