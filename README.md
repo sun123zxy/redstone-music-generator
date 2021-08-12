@@ -1,5 +1,7 @@
 # Redstone Music Generator
 
+[README_zh.md](README_zh.md)
+
 A project based on Raspberry Jam Mod aimed to automate redstone-music building process in Minecraft, using python scripts and MIDI file.
 
 The project is developed under Minecraft Java Edition 1.12.2, Python 3.8.3 and [Raspberry Jam Mod 0.94](https://github.com/arpruss/raspberryjammod/releases/tag/0.94). Python requirements are declared in `requirements.txt`. (Anyway I guess it is compatible with Minecraft 1.8~1.12.2 and any version of Python 3) 

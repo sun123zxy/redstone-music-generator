@@ -46,10 +46,9 @@ class AdvancingPosGen():
             t = round(tFrac)
         else:
             if tFrac.numerator % tFrac.denominator != 0: 
-                echo("Error in class AdvancingPosGen function genPos(): \n"
-                   + "    cannot find a valid position to place the note. \n"
-                   + "    beat * unitPart / unitBeat is not an integer")
-                exit()
+                raise Exception("cannot find a valid position to place the note. "
+                                    + "beat * unitPart / unitBeat is not an integer. "
+                                    + "(check your MIDI file and parameters, or enable AdvancingPosGen.magnet)")
             t = int(tFrac)
         unit = floor(t / unitPart)
         div  = t % unitPart
@@ -138,9 +137,7 @@ class GroundedAdvancing():
         if value.denominator == 1 or value.numerator == 1:
             self._apg.unitBeat = value
         else:
-            echo("Error in class GroundAdvancing function unitBeat.setter(): \n"
-               + "    failed to set unitBeat. one of the numerator and denominator must be 1.")
-            exit()
+            raise Exception("failed to set unitBeat. one of the numerator and denominator must be 1.")
 
     @property
     def unitPart(self):
@@ -285,10 +282,8 @@ class GroundedAdvancing():
                                      block.REDSTONE_REPEATER_INACTIVE.id,
                                      (self.partDelay - 1) * 4 + direction(-realDir))
             if cnt != 0:
-                echo("Error in class GroundedAdvancing function onBeat(): \n"
-                   + "    at beat " + str(beat) + " (unit " + str(unit) + ") \n"
-                   + "    unitDltFwd is not enough to place repeaters between units")
-                exit()
+                raise Exception("at beat " + str(beat) + " (unit " + str(unit) + "), "
+                              + "unitDltFwd is not enough to place repeaters between units")
 
 class GroundedSnake():
     pass
