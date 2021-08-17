@@ -266,9 +266,6 @@ class GroundedAdvancing():
                     self.mc.setBlockWithNBT(self.axis.Vec3L(pos + Vec3(0,-1,0)), self.baseBlock)
                     self.mc.setBlockWithNBT(self.axis.Vec3L(pos + Vec3(0, 0,0)), self.baseBlock)
                     self.mc.setBlockWithNBT(self.axis.Vec3L(pos + Vec3(0, 1,0)), self.partBlock)
-                if unit == ub + self.unitBeat.denominator - 1 and beat % sender.midiHan.numerator == 3:
-                    pos = origin + dir * (2 * self.unitPart + 1) + Vec3(0, -1, 1)
-                    self.mc.setBlockWithNBT(self.axis.Vec3L(pos), self.partBlock)
             # branch
             for i in range(0, self.unitPart):
                 pos = origin + dir * i * 2
