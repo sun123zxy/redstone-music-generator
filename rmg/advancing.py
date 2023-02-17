@@ -24,6 +24,7 @@ class Advancing:
         self.axis: Axis = config["axis"]
         self.width: int = config["width"]
         self.fwd: int = config["fwd"]
+        self.up: int = 0 if config.get("up") == None else config["up"] # use only when turning off base generation
         self.upb: Fraction = config["unit_per_beat"]
         self.magnet = config.get("magnet")
         self.is_mini = config.get("mini")
@@ -39,7 +40,7 @@ class Advancing:
     def generate(self) -> None:
         note_axis = Axis(self.axis.l2g(Vec3(-2, 0, 0)), self.axis.fwd_facing, self.axis.left_facing) if self.is_mini else deepcopy(self.axis)
         if self.is_gen_base == True:
-            for i in range(0, floor(self.length * self.upb / self.width + 1)):
+            for i in range(0, floor(self.length * self.upb / self.width)):
                 z = i * self.fwd
                 for x in range(1, self.width * 2 + 1):
                     if(self.is_mini and x == 1):
@@ -77,7 +78,9 @@ class Advancing:
             x = (round(beat * self.upb) % self.width + 1) * 2
             # print(beat, x, z)
             
-            your_axis = Axis(note_axis.l2g(Vec3(x, 1, z)), note_axis.fwd_facing, note_axis.left_facing)
+            y = 1 + floor(beat * self.upb / self.width) * self.up
+
+            your_axis = Axis(note_axis.l2g(Vec3(x, y, z)), note_axis.fwd_facing, note_axis.left_facing)
 
             def is_free(pos: Vec3) -> bool:
                 return self.mc.getBlock(your_axis.l2g(pos)) == block.AIR.id

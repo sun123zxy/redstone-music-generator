@@ -14,11 +14,11 @@ import rmg.advancing, rmg.snake
 
 from pbgen import pbgen
 
-class PianoCmd(pbgen.Bgen):
+class StaticFallCmd(pbgen.Bgen):
     """!!! IMPORTANT INSTRUCTION!!!
     
     /setworldspawn 0 0 0 before use, or use mcpi_offset to manually eliminate the error"""
-    def __init__(self, config) -> None:
+    def __init__(self, config:dict) -> None:
         self.axis:Axis = config["axis"]
         self.center:int = config["center"]
         self.height:int = config["height"]
@@ -26,6 +26,9 @@ class PianoCmd(pbgen.Bgen):
         self.v_type = config["v_type"]
         if self.v_type != "fixed":
             self.v_dlt:Vec3 = config["v_dlt"]
+        
+        self.blk_namespace = config["block_namespace"]
+        self.blk_datavalue = 0 if config.get("block_datavalue") == None else config.get("block_datavalue")
             
         self.mcpi_offset:Vec3 = Vec3(0, 0, 0) if config.get("mcpi_offset") == None else config.get("mcpi_offset")
 
@@ -35,19 +38,22 @@ class PianoCmd(pbgen.Bgen):
         if self.v_type == "fixed":
             pass
         elif self.v_type == "lkrb":
-            pos += self.v_dlt * floor(lkrb.velocity2force(velocity))
+            pos += self.v_dlt * (7 - floor(lkrb.velocity2force(velocity)))
         pos = self.mcpi_offset + self.axis.l2g(pos)
         blk = deepcopy(block.COMMAND_BLOCK)
         if type == "note_on":
-            blk.nbt = '{Command: "/summon falling_block ' + str(pos.x) + ' ' + str(pos.y) + ' ' + str(pos.z) +' {Block:\\"minecraft:redstone_block\\",Time: 1}" }'
+            blk.nbt = '{Command: "/summon falling_block ' + str(pos.x) + ' ' + str(pos.y) + ' ' + str(pos.z) + ' {Block:\\"' + self.blk_namespace + '\\",Data:' + str(self.blk_datavalue) + ',Time:1}"}'
             # /summon falling_block ~ ~1 ~ {Block:"minecraft:redstone_block",Time: 1}
         return blk
 
-class PianoKeyboard:
+class StaticFallKeyboard:
     def __init__(self, config: dict) -> None:
         self.mc:Minecraft = config["mc"]
         self.axis:Axis = config["axis"]
+        print("Notice! Keyboard will generate by axis:", self.axis)
         self.center:int = config["center"]
+        self.st_v:int = config["st_v"]
+        self.ed_v:int = config["ed_v"]
 
         self.v_type = config["v_type"]
         if self.v_type != "fixed":
@@ -68,8 +74,8 @@ class PianoKeyboard:
                 self.mc.setBlockWithNBT(self.axis.l2g(Vec3(note - self.center, 1, 1)), blk)
         elif self.v_type == "lkrb":
             for force in range(0, 8):
-                my_axis = Axis(self.axis.l2g(self.v_dlt * force), self.axis.fwd_facing, self.axis.left_facing)
-                for note in range(0, 128):
+                my_axis = Axis(self.axis.l2g(self.v_dlt * (7 - force)), self.axis.fwd_facing, self.axis.left_facing)
+                for note in range(self.st_v, self.ed_v):
                     blk = self.bgen.bgen(None, ("note_on", note, lkrb.force2velocity(force), None))
                     self.mc.setBlockWithNBT(my_axis.l2g(Vec3(note - self.center, 1, 1)), blk)
 
@@ -78,7 +84,7 @@ class PianoKeyboard:
                     self.mc.setBlockWithNBT(my_axis.l2g(Vec3(note - self.center, 0, 0)), blk)
         else:
             print("v_type invalid")
-        print("<<< piano keyboard generated <<<")
+        print("<<< static fall keyboard generated <<<")
 
 if __name__ == "__main__":
     mc = Minecraft()
@@ -87,8 +93,10 @@ if __name__ == "__main__":
         "mc": mc,
         "axis": Axis(player_axis_lhs(mc).l2g(Vec3(0, 0, -40)), player_axis_lhs(mc).back_facing, player_axis_lhs(mc).right_facing),
         "center": 60,
+        "st_v": 21,
+        "ed_v": 109,
         "v_type": "lkrb",
-        "v_dlt": Vec3(0, 2, 3),
+        "v_dlt": Vec3(0, 2, 4),
         "bgen":{
             "handler": pbgen.LkrbCmd,
             "config": {}
@@ -111,7 +119,7 @@ if __name__ == "__main__":
             "on": True,
             "tick_per_repeater": 1,
             "base_block": deepcopy(block.STONE),
-            "pad_block": deepcopy(block.REDSTONE_LAMP_INACTIVE),
+            "pad_block": deepcopy(block.DIRT),
         },
         "mc": mc,
         "axis": player_axis_lhs(mc, Vec3(0, 0, 1)),
@@ -132,24 +140,28 @@ if __name__ == "__main__":
                          (Vec3(0, -1, 0), True)],
                 "ignore_out_of_range": False,
                 "bgen":{
-                    "handler": PianoCmd,
+                    "handler": StaticFallCmd,
                     "config":{
                         "axis": kb_config["axis"],
                         "center": kb_config["center"],
                         "v_type": kb_config["v_type"],
                         "v_dlt": kb_config["v_dlt"],
-                        "height": 30
+                        "height": 30,
+                        "block_namespace": "minecraft:redstone_block",
+                        "block_datavalue": 0
                     }
                 }
             }
         }
     }
-    PianoKeyboard(kb_config).generate()
+    StaticFallKeyboard(kb_config).generate()
     for i in range(1, 5 + 1):
         t= floor((i-1) / 2)
         if i % 2 == 0:
             adv_config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
         else:
             adv_config["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
+        # adv_config["pbgen"]["config"]["bgen"]["config"]["block_namespace"] = "coloredredstone:colored_redstone_block"
+        # adv_config["pbgen"]["config"]["bgen"]["config"]["block_datavalue"] = i - 1
         adv_config["midi"]["msg_gen"]["track"] = i + 1
         rmg.advancing.Advancing(adv_config).generate()

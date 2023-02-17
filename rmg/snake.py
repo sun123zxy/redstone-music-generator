@@ -37,7 +37,7 @@ class Snake:
     
     def generate(self) -> None:
         if self.is_gen_base == True:
-            for i in range(0, floor(self.length * self.upb / self.width + 1)):
+            for i in range(0, floor(self.length * self.upb / self.width)):
                 z = i * self.fwd
                 typ = i % 2
                 for x in range(0, self.width * 2 - 1):
