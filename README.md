@@ -1,5 +1,11 @@
 # Redstone Music Generator
 
+## Note
+
+Once there was a reconstruction plan for this project. Most of the work was finished, however, for some reason, the project has been shelved. The renewed version is already functional, though with little documentation. It can be reached in `develop` branch if you are interested.
+
+## Description
+
 [README_zh.md](README_zh.md)
 
 A project based on Raspberry Jam Mod aimed to automate redstone-music building process in Minecraft, using python scripts and MIDI file.
