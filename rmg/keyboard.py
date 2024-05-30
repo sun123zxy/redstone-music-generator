@@ -25,20 +25,22 @@ class StaticKeyboard(Keyboard):
         print("Notice! Keyboard will generate by axis:", self.axis)
 
         self.notes:list = config["notes"]
-        self.vel_num:list = config["vel_num"]
-        self.vel_dlt:Vec3 = config["vel_dlt"]
+
+        self.vel2force:function = config["vel2force"]
+        self.force2vel:function = config["force2vel"]
+        self.force_num = config["force_num"]
+        self.force_dlt = config["force_dlt"]
 
         self.bgen:rmg.Bgen = config["bgen"]
     
     def place_axis(self, beat: Fraction, msg: tuple) -> Axis:
         type, note, velocity, program_id = msg
-        force = floor(velocity / (128.0 / self.vel_num))
-        my_axis = Axis(self.axis.l2g(self.vel_dlt * (self.vel_num - 1 - force)), self.axis.fwd_facing)
+        my_axis = Axis(self.axis.l2g(self.force_dlt * self.vel2force(velocity)), self.axis.fwd_facing)
         return Axis(my_axis.l2g(Vec3(note, 1, 0)), my_axis.fwd_facing)
 
     def generate(self) -> None:
-        for force in range(0, self.vel_num):
-            velocity = floor((force + 0.5) * 128 / self.vel_num)
+        for force in set(map(self.vel2force, range(0, 128))):
+            velocity = self.force2vel(force)
             for note in self.notes:
                 blk = self.bgen.bgen(None, ("note_on", note, velocity, None))
                 self.mc.setBlockWithNBT(self.place_axis(0, (None, note, velocity, None)).l2g(Vec3(0,0,1)), blk)

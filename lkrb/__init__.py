@@ -16,11 +16,11 @@ def force2str(force: int) -> str:
         elif force == 7: return "fff"
         else: return None
 
-vel_num = 8
+force_num = 8
 
-def velocity2force(velocity: int) -> int:
+def vel2force(velocity: int) -> int:
         return floor(velocity / 16)
-def force2velocity(force: int) -> int:
+def force2vel(force: int) -> int:
         return force * 16 + 8
 
 class LkrbCmd(rmg.Bgen):
@@ -31,6 +31,6 @@ class LkrbCmd(rmg.Bgen):
         type, note, velocity, porgram_id = msg
         blk = deepcopy(block.COMMAND_BLOCK)
         if type == "note_on":
-            blk.nbt = '{Command: "/execute @p ~ ~ ~ playsound lkrb.piano.p' + str(note) + force2str(velocity2force(velocity)) + ' voice @p ~ ~ ~"}'
+            blk.nbt = '{Command: "/execute @p ~ ~ ~ playsound lkrb.piano.p' + str(note) + force2str(vel2force(velocity)) + ' voice @p ~ ~ ~"}'
         return blk
 

@@ -19,12 +19,11 @@ if __name__ == "__main__":
         "mc": mc,
         "axis": player_axis_rhs(mc),
         "notes": list(range(21,109)),
-        "vel_num": lkrb.vel_num,
-        "vel_dlt": Vec3(0, 2, 4),
-        "bgen":{
-            "handler": lkrb.LkrbCmd,
-            "config": {}
-        }
+        "vel2force": lambda v : lkrb.vel2force(127 - v),
+        "force2vel": lambda f : 127 - lkrb.force2vel(f),
+        "force_num": lkrb.force_num,
+        "force_dlt": Vec3(0, 2, 4),
+        "bgen": lkrb.LkrbCmd({})
     }
     kb = rmg.StaticKeyboard(kb_config)
     
