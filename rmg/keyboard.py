@@ -28,7 +28,7 @@ class StaticKeyboard(Keyboard):
         self.vel_num:list = config["vel_num"]
         self.vel_dlt:Vec3 = config["vel_dlt"]
 
-        self.bgen:rmg.Bgen = config["bgen"]["handler"](config["bgen"].get("config"))
+        self.bgen:rmg.Bgen = config["bgen"]
     
     def place_axis(self, beat: Fraction, msg: tuple) -> Axis:
         type, note, velocity, program_id = msg

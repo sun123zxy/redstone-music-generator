@@ -38,23 +38,17 @@ if __name__ == "__main__":
         "width": 8,
         "fwd": 3,
         "magnet": True,
-        "pbgen":{
-            "handler": rmg.SmartAround,
-            "config": {
-                "dlt":  [(Vec3(0, 1, 0), True), 
-                         (Vec3(0, 0, 1), False),
-                         (Vec3(0, 0, -1), False), 
-                         (Vec3(1, 0, 0), False), 
-                         (Vec3(-1, 0, 0), False),
-                         (Vec3(0, 0, 0), True),
-                         (Vec3(0, -1, 0), True)],
-                "ignore_out_of_range": False,
-                "bgen":{
-                    "handler": lkrb.LkrbCmd,
-                    "config": {}
-                }
-            }
-        }
+        "pbgen": rmg.SmartAround({
+            "dlt":  [(Vec3(0, 1, 0), True), 
+                     (Vec3(0, 0, 1), False),
+                     (Vec3(0, 0, -1), False), 
+                     (Vec3(1, 0, 0), False), 
+                     (Vec3(-1, 0, 0), False),
+                     (Vec3(0, 0, 0), True),
+                     (Vec3(0, -1, 0), True)],
+            "ignore_out_of_range": False,
+            "bgen": lkrb.LkrbCmd({})
+        })
     }
     for i in range(1, 5 + 1):
         t= floor((i-1) / 2)

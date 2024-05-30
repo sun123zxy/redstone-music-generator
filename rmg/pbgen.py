@@ -22,7 +22,7 @@ class SmartAround(Pbgen):
     def __init__(self, config: dict) -> None:
         self.dlt:list = config["dlt"]
         self.ignore_out_of_range:bool = config.get("ignore_out_of_range")
-        self.bgen:Bgen = config["bgen"]["handler"](config["bgen"].get("config"))
+        self.bgen:Bgen = config["bgen"]
 
     def pbgen(self, beat, lst: list, check = lambda: True) -> list:
         cnt = 0

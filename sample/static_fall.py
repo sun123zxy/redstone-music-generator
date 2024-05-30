@@ -58,29 +58,23 @@ if __name__ == "__main__":
         "fwd": 3,
         "magnet": True,
         "mini": False,
-        "pbgen":{
-            "handler": rmg.SmartAround,
-            "config": {
-                "dlt":  [(Vec3(0, 1, 0), True), 
-                         (Vec3(0, 0, 1), False),
-                         (Vec3(0, 0, -1), False), 
-                         (Vec3(1, 0, 0), False), 
-                         (Vec3(-1, 0, 0), False),
-                         (Vec3(0, 0, 0), True),
-                         (Vec3(0, -1, 0), True)],
-                "ignore_out_of_range": False,
-                "bgen":{
-                    "handler": rmg.StaticFallCmd,
-                    "config":{
-                        "axis": kb_config["axis"],
-                        "height": 30,
-                        "keyboard": kb,
-                        "block_namespace": "minecraft:redstone_block",
-                        "block_datavalue": 0
-                    }
-                }
-            }
-        }
+        "pbgen":rmg.SmartAround({
+            "dlt":  [(Vec3(0, 1, 0), True), 
+                     (Vec3(0, 0, 1), False),
+                     (Vec3(0, 0, -1), False), 
+                     (Vec3(1, 0, 0), False), 
+                     (Vec3(-1, 0, 0), False),
+                     (Vec3(0, 0, 0), True),
+                     (Vec3(0, -1, 0), True)],
+            "ignore_out_of_range": False,
+            "bgen": rmg.StaticFallCmd({
+                "axis": kb_config["axis"],
+                "height": 30,
+                "keyboard": kb,
+                "block_namespace": "minecraft:redstone_block",
+                "block_datavalue": 0
+            })
+        })
     }
     for i in range(1, 5 + 1):
         t= floor((i-1) / 2)

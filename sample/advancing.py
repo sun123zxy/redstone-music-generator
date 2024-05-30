@@ -13,7 +13,7 @@ import rmg, lkrb
 if __name__ == "__main__":
     mc = Minecraft()
     midihan = MIDIHandler("my_script/music.mid")
-    configA = {
+    config = {
         "midi":{
             "handler": midihan,
             "msg_gen":{
@@ -39,29 +39,23 @@ if __name__ == "__main__":
         "fwd": 3,
         "magnet": True,
         "mini": False,
-        "pbgen":{
-            "handler": rmg.SmartAround,
-            "config": {
-                "dlt":  [(Vec3(0, 1, 0), True), 
-                         (Vec3(0, 0, 1), False),
-                         (Vec3(0, 0, -1), False), 
-                         (Vec3(1, 0, 0), False), 
-                         (Vec3(-1, 0, 0), False),
-                         (Vec3(0, 0, 0), True),
-                         (Vec3(0, -1, 0), True)],
-                "ignore_out_of_range": False,
-                "bgen":{
-                    "handler": lkrb.LkrbCmd,
-                    "config": {}
-                }
-            }
-        }
+        "pbgen": rmg.SmartAround({
+            "dlt":  [(Vec3(0, 1, 0), True), 
+                     (Vec3(0, 0, 1), False),
+                     (Vec3(0, 0, -1), False), 
+                     (Vec3(1, 0, 0), False), 
+                     (Vec3(-1, 0, 0), False),
+                     (Vec3(0, 0, 0), True),
+                     (Vec3(0, -1, 0), True)],
+            "ignore_out_of_range": False,
+            "bgen": lkrb.LkrbCmd({})
+        })
     }
     for i in range(1, 5 + 1):
         t= floor((i-1) / 2)
         if i % 2 == 0:
-            configA["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
+            config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
         else:
-            configA["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
-        configA["midi"]["msg_gen"]["track"] = i + 1
-        rmg.Advancing(configA).generate()
+            config["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
+        config["midi"]["msg_gen"]["track"] = i + 1
+        rmg.Advancing(config).generate()
