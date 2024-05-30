@@ -7,9 +7,9 @@ import mido
 from mcpi.vec3 import Vec3
 from mcpi import block
 
-from pbgen.pbgen import Pbgen
+import rmg
 
-class SomaSmartAround(Pbgen):
+class SomaSmartAround(rmg.Pbgen):
     def __init__(self, config: dict) -> None:
         self.program: str = config["program"]
         if self.program == "auto":

@@ -6,8 +6,6 @@ import mido
 from mcpi import block
 from mcpi.vec3 import Vec3
 
-from utils import lkrb
-
 class Pbgen:
     def __init__(self, config: dict) -> None:
         pass
@@ -41,14 +39,3 @@ class SmartAround(Pbgen):
                     cnt += 1
             cnt += 1
         return output
-
-class LkrbCmd(Bgen):
-    def __init__(self, config: dict) -> None:
-        pass
-
-    def bgen(self, beat, msg) -> list:
-        type, note, velocity, porgram_id = msg
-        blk = deepcopy(block.COMMAND_BLOCK)
-        if type == "note_on":
-            blk.nbt = '{Command: "/execute @p ~ ~ ~ playsound lkrb.piano.p' + str(note) + lkrb.force2str(lkrb.velocity2force(velocity)) + ' voice @p ~ ~ ~"}'
-        return blk
