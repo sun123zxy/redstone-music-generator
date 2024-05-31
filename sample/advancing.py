@@ -60,16 +60,6 @@ if __name__ == "__main__":
         config["midi"]["msg_gen"]["track"] = i + 1
         
         if i == 6:
-            config["pbgen"] = rmg.SmartAround({
-            "dlt":  [(Vec3(0, 1, 0), True), 
-                     (Vec3(0, 0, 1), False),
-                     (Vec3(0, 0, -1), False), 
-                     (Vec3(1, 0, 0), False), 
-                     (Vec3(-1, 0, 0), False),
-                     (Vec3(0, 0, 0), True),
-                     (Vec3(0, -1, 0), True)],
-            "ignore_out_of_range": False,
-            "bgen": note.NoteDrumCmd({"vel_factor": 0.75})
-        })
+            config["pbgen"] = rmg.SmartAround({**config["pbgen"].config, "bgen": note.NoteDrumCmd({"vel_factor": 0.8})})
         
         rmg.Advancing(config).generate()

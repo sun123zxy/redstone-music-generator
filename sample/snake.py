@@ -8,12 +8,12 @@ from mcpi.vec3 import Vec3
 from utils.midi_handler import MIDIHandler
 from utils.axis import Axis, player_axis_lhs, player_axis_rhs
 
-import rmg, lkrb
+import rmg, lkrb, note
 
 if __name__ == "__main__":
     mc = Minecraft()
     midihan = MIDIHandler("my_script/music.mid")
-    configA = {
+    config = {
         "midi":{
             "handler": midihan,
             "msg_gen":{
@@ -50,11 +50,15 @@ if __name__ == "__main__":
             "bgen": lkrb.LkrbCmd({})
         })
     }
-    for i in range(1, 5 + 1):
+    for i in range(1, 6 + 1):
         t= floor((i-1) / 2)
         if i % 2 == 0:
-            configA["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
+            config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
         else:
-            configA["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
-        configA["midi"]["msg_gen"]["track"] = i + 1
-        rmg.Snake(configA).generate()
+            config["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
+        config["midi"]["msg_gen"]["track"] = i + 1
+        
+        if i == 6:
+            config["pbgen"] = rmg.SmartAround({**config["pbgen"].config, "bgen": note.NoteDrumCmd({"vel_factor": 0.8})})
+        
+        rmg.Snake(config).generate()

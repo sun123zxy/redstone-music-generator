@@ -13,6 +13,8 @@ class StaticFallCmd(rmg.Bgen):
     
     /setworldspawn 0 0 0 before use, or use mcpi_offset to manually eliminate the error"""
     def __init__(self, config:dict) -> None:
+        super().__init__(config)
+
         self.height:int = config["height"]
         
         self.keyboard:rmg.Keyboard = config["keyboard"]
@@ -23,6 +25,8 @@ class StaticFallCmd(rmg.Bgen):
         self.mcpi_offset:Vec3 = Vec3(0, 0, 0) if config.get("mcpi_offset") == None else config.get("mcpi_offset")
 
     def bgen(self, beat, msg: tuple) -> list:
+        super().bgen(beat, msg)
+
         type, note, velocity, porgram_id = msg
         pos = self.mcpi_offset + self.keyboard.place(beat, msg) + Vec3(0, self.height, 0)
         blk = deepcopy(block.COMMAND_BLOCK)

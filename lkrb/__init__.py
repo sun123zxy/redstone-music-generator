@@ -23,9 +23,11 @@ def force2vel(force: int) -> int:
 
 class LkrbCmd(rmg.Bgen):
     def __init__(self, config: dict) -> None:
-        pass
+        super().__init__(config)
 
     def bgen(self, beat, msg) -> list:
+        super().bgen(beat, msg)
+        
         type, note, velocity, porgram_id = msg
         blk = deepcopy(block.COMMAND_BLOCK)
         if type == "note_on":

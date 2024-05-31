@@ -17,10 +17,14 @@ drum_mapping = {
 
 class NoteDrumCmd(rmg.Bgen):
     def __init__(self, config: dict) -> None:
+        super().__init__(config)
+
         self.mapping:dict = config["mapping"] if "mapping" in config else drum_mapping
         self.vel_factor = config["vel_factor"] if "vel_factor" in config else 1
 
     def bgen(self, beat, msg) -> list:
+        super().bgen(beat, msg)
+
         type, note, velocity, porgram_id = msg
         blk = deepcopy(block.COMMAND_BLOCK)
         name, pitch = self.mapping[note]

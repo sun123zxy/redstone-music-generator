@@ -9,12 +9,15 @@ from mcpi import block
 from utils.midi_handler import MIDIHandler
 from utils.axis import Axis
 from utils.direction import turn_back
+from utils.config import ConfigLike
 
 import rmg
 
-class Advancing:
+class Advancing(ConfigLike):
 
     def __init__(self, config: dict) -> None:
+        super().__init__(config)
+        
         self.midihan: MIDIHandler = config["midi"]["handler"]
         self.msg_gen_config = config["midi"]["msg_gen"]
         self.st_beat = config.get("midi").get("msg_gen").get("st_beat") if config.get("midi").get("msg_gen").get("st_beat") != None else 0

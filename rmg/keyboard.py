@@ -7,12 +7,13 @@ from mcpi.minecraft import Minecraft
 from mcpi import block
 
 from utils.axis import Axis
+from utils.config import ConfigLike
 
 import rmg
 
-class Keyboard:
+class Keyboard(ConfigLike):
     def __init__(self, config: dict) -> None:
-        pass
+        super().__init__(config)
     def place_axis(self, beat: Fraction, msg: tuple) -> Vec3:
         pass
     def place(self, *args) -> Vec3:
@@ -20,6 +21,8 @@ class Keyboard:
 
 class StaticKeyboard(Keyboard):
     def __init__(self, config: dict) -> None:
+        super().__init__(config)
+
         self.mc:Minecraft = config["mc"]
         self.axis:Axis = config["axis"]
         print("Keyboard will generate by axis:", self.axis)
