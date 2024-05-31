@@ -1,5 +1,5 @@
-from .pbgen import Bgen, Pbgen, SmartAround
+from .pbgen import Axgen, Pgen, Bgen, PBgen, SmartAround
 from .advancing import Advancing
 from .snake import Snake
-from .keyboard import Keyboard, StaticKeyboard
-from .static_fall import StaticFallCmd
+from .keyboard import StaticKeyboard, DynamicKeyboard
+from .fall import FallCmd

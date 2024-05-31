@@ -26,8 +26,6 @@ class LkrbCmd(rmg.Bgen):
         super().__init__(config)
 
     def bgen(self, beat, msg) -> list:
-        super().bgen(beat, msg)
-        
         type, note, velocity, porgram_id = msg
         blk = deepcopy(block.COMMAND_BLOCK)
         if type == "note_on":

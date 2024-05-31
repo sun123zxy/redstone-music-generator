@@ -22,8 +22,6 @@ class NoteDrumCmd(rmg.Bgen):
         self.vel_factor = config["vel_factor"] if "vel_factor" in config else 1
 
     def bgen(self, beat, msg) -> list:
-        super().bgen(beat, msg)
-
         type, note, velocity, porgram_id = msg
         blk = deepcopy(block.COMMAND_BLOCK)
         name, pitch = self.mapping[note]

@@ -6,7 +6,7 @@ from mcpi import block
 from mcpi.minecraft import Minecraft
 from mcpi.vec3 import Vec3
 
-import rmg.static_fall
+import rmg
 from utils.midi_handler import MIDIHandler
 from utils.axis import Axis, player_axis_lhs, player_axis_rhs
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     os.system("pause")
     # ---
 
-    adv_config = {
+    snake_config = {
         "midi":{
             "handler": midihan,
             "msg_gen":{
@@ -80,9 +80,9 @@ if __name__ == "__main__":
                      (Vec3(0, 0, 0), True),
                      (Vec3(0, -1, 0), True)],
             "ignore_out_of_range": False,
-            "bgen": (rmg.StaticFallCmd, {
+            "bgen": (rmg.FallCmd, {
                 "height": 30,
-                "keyboard": lkrb_kb,
+                "axgen": lkrb_kb,
                 "block_namespace": "minecraft:redstone_block",
                 "block_datavalue": 0
             })
@@ -91,14 +91,14 @@ if __name__ == "__main__":
     for i in range(1, 6 + 1):
         t= floor((i-1) / 2)
         if i % 2 == 0:
-            adv_config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
+            snake_config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
         else:
-            adv_config["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
-        # adv_config["pbgen"]["config"]["bgen"]["config"]["block_namespace"] = "coloredredstone:colored_redstone_block"
-        # adv_config["pbgen"]["config"]["bgen"]["config"]["block_datavalue"] = i - 1
-        adv_config["midi"]["msg_gen"]["track"] = i + 1
+            snake_config["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
+        # snake_config["pbgen"]["config"]["bgen"]["config"]["block_namespace"] = "coloredredstone:colored_redstone_block"
+        # snake_config["pbgen"]["config"]["bgen"]["config"]["block_datavalue"] = i - 1
+        snake_config["midi"]["msg_gen"]["track"] = i + 1
 
         if i == 6:
-            adv_config["pbgen"][1]["bgen"][1]["keyboard"] = drum_kb
+            snake_config["pbgen"][1]["bgen"][1]["axgen"] = drum_kb
 
-        rmg.Snake(adv_config).generate()
+        rmg.Snake(snake_config).generate()

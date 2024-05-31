@@ -9,7 +9,7 @@ from mcpi import block
 
 import rmg
 
-class SomaSmartAround(rmg.Pbgen):
+class SomaSmartAround(rmg.PBgen):
     def __init__(self, config: dict) -> None:
         self.program: str = config["program"]
         if self.program == "auto":

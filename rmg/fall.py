@@ -6,9 +6,9 @@ from mcpi.vec3 import Vec3
 from mcpi.minecraft import Minecraft
 from mcpi import block
 
-import rmg, lkrb
+import rmg
 
-class StaticFallCmd(rmg.Bgen):
+class FallCmd(rmg.Bgen):
     """!!! IMPORTANT INSTRUCTION!!!
     
     /setworldspawn 0 0 0 before use, or use mcpi_offset to manually eliminate the error"""
@@ -17,7 +17,7 @@ class StaticFallCmd(rmg.Bgen):
 
         self.height:int = config["height"]
         
-        self.keyboard:rmg.Keyboard = config["keyboard"]
+        self.pgen:rmg.Pgen = config["axgen"]
         
         self.blk_namespace = config["block_namespace"]
         self.blk_datavalue = 0 if config.get("block_datavalue") == None else config.get("block_datavalue")
@@ -28,7 +28,7 @@ class StaticFallCmd(rmg.Bgen):
         super().bgen(beat, msg)
 
         type, note, velocity, porgram_id = msg
-        pos = self.mcpi_offset + self.keyboard.place(beat, msg) + Vec3(0, self.height, 0)
+        pos = self.mcpi_offset + self.pgen.pgen(beat, msg) + Vec3(0, self.height, 0)
         blk = deepcopy(block.COMMAND_BLOCK)
         if type == "note_on":
             blk.nbt = '{Command: "/summon falling_block ' + str(pos.x) + ' ' + str(pos.y) + ' ' + str(pos.z) + ' {Block:\\"' + self.blk_namespace + '\\",Data:' + str(self.blk_datavalue) + ',Time:1}"}'

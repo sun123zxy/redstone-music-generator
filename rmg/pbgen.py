@@ -7,14 +7,29 @@ from mcpi import block
 from mcpi.vec3 import Vec3
 
 from utils.config import ConfigLike
+from utils.axis import Axis
 
 import rmg
 
-class Pbgen(ConfigLike):
+class PBgen(ConfigLike):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
     def pbgen(self, beat: Fraction, msglst: list) -> list:
         pass
+
+class Pgen(ConfigLike):
+    def __init__(self, config: dict) -> None:
+        super().__init__(config)
+    def pgen(self, beat: Fraction, msg: tuple) -> Vec3:
+        pass
+
+class Axgen(Pgen):
+    def __init__(self, config: dict) -> None:
+        super().__init__(config)
+    def axgen(self, beat: Fraction, msg: tuple) -> Axis:
+        pass
+    def pgen(self, beat: Fraction, msg: tuple) -> Vec3:
+        return self.axgen(beat, msg).origin
 
 class Bgen(ConfigLike):
     def __init__(self, config: dict) -> None:
@@ -22,7 +37,7 @@ class Bgen(ConfigLike):
     def bgen(self, beat: Fraction, msg: tuple) -> block.Block:
         pass
 
-class SmartAround(Pbgen):
+class SmartAround(PBgen):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
 
@@ -33,8 +48,6 @@ class SmartAround(Pbgen):
         self.bgen: rmg.Bgen = bgen(bgen_config)
 
     def pbgen(self, beat, lst: list, check = lambda: True) -> list:
-        super().pbgen(beat, lst)
-
         cnt = 0
         output = []
         for type, note, velocity, program_id in lst:
