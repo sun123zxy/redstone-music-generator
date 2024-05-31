@@ -35,7 +35,7 @@ if __name__ == "__main__":
         "mc": mc,
         "axis": player_axis_lhs(mc, Vec3(1, 0, 1)),
         "unit_per_beat": 4,
-        "width": 8,
+        "width": 32,
         "fwd": 3,
         "magnet": True,
         "pbgen": rmg.SmartAround({

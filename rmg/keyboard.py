@@ -31,8 +31,8 @@ class StaticKeyboard(Keyboard):
         self.note2id = {note: i for i, note in enumerate(self.notes)}
 
         self.vel2force:dict = config["vel2force"]
-        self.force2vel = {f: v for v, f in self.vel2force.items()}
-        self.forces = self.vel2force.values()
+        self.force2vel:dict = config["force2vel"] if "force2vel" in config else {f: v for v, f in self.vel2force.items()}
+        self.forces = self.force2vel.keys()
         self.force_dlt:Vec3 = config["force_dlt"]
 
         self.bgen:rmg.Bgen = config["bgen"]
@@ -42,6 +42,8 @@ class StaticKeyboard(Keyboard):
         return Axis(my_axis.l2g(Vec3(nid, 1, 0)), my_axis.fwd_facing)
 
     def place_axis(self, beat: Fraction, msg: tuple) -> Axis:
+        super().place_axis(beat, msg)
+
         type, note, velocity, program_id = msg
         return self._place_axis_by_nid_and_force(self.note2id[note], self.vel2force[velocity])
 

@@ -1,5 +1,5 @@
 from fractions import Fraction
-from math import floor
+from math import floor, ceil
 from copy import deepcopy
 
 from mcpi.vec3 import Vec3
@@ -40,7 +40,7 @@ class Snake(ConfigLike):
     
     def generate(self) -> None:
         if self.is_gen_base == True:
-            for i in range(0, floor(self.length * self.upb / self.width)):
+            for i in range(0, ceil(self.length * self.upb / self.width)):
                 z = i * self.fwd
                 typ = i % 2
                 for x in range(0, self.width * 2 - 1):

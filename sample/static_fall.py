@@ -10,12 +10,13 @@ import rmg.static_fall
 from utils.midi_handler import MIDIHandler
 from utils.axis import Axis, player_axis_lhs, player_axis_rhs
 
-import rmg, lkrb
+import rmg, lkrb, note
 
 if __name__ == "__main__":
     mc = Minecraft()
     midihan = MIDIHandler("my_script/music.mid")
-    kb_config = {
+    
+    lkrb_kb_config = {
         "mc": mc,
         "axis": player_axis_rhs(mc),
         "notes": list(range(21,109)),
@@ -23,9 +24,24 @@ if __name__ == "__main__":
         "force_dlt": Vec3(0, 2, 4),
         "bgen": lkrb.LkrbCmd({})
     }
-    kb = rmg.StaticKeyboard(kb_config)
+    lkrb_kb = rmg.StaticKeyboard(lkrb_kb_config)
     
-    kb.generate()
+    lkrb_kb.generate()
+    os.system("pause")
+    # ---
+
+    drum_kb_config = {
+        "mc": mc,
+        "axis": player_axis_rhs(mc),
+        "notes": note.drum_mapping.keys(),
+        "vel2force": {**{v : 0 for v in range(0, 32)}, **{v : 1 for v in range(32, 64)}, **{v : 2 for v in range(64, 96)}, **{v : 3 for v in range(96, 128)}},
+        "force2vel": {0: 16, 1: 48, 2: 80, 3: 112},
+        "force_dlt": Vec3(0, 0, 3),
+        "bgen": note.NoteDrumCmd({"vel_factor": 0.8})
+    }
+    drum_kb = rmg.StaticKeyboard(drum_kb_config)
+
+    drum_kb.generate()
     os.system("pause")
     # ---
 
@@ -34,7 +50,7 @@ if __name__ == "__main__":
             "handler": midihan,
             "msg_gen":{
                 "track": 2 + 1,
-                "st_beat": 53 * 4,
+                "st_beat": None,
                 "ed_beat": None,
                 "type_switch":{
                     "note_on": True,
@@ -51,7 +67,7 @@ if __name__ == "__main__":
         "mc": mc,
         "axis": player_axis_lhs(mc, Vec3(0, 0, 1)),
         "unit_per_beat": 4,
-        "width": 8,
+        "width": 32,
         "fwd": 3,
         "magnet": True,
         "mini": False,
@@ -65,15 +81,14 @@ if __name__ == "__main__":
                      (Vec3(0, -1, 0), True)],
             "ignore_out_of_range": False,
             "bgen": rmg.StaticFallCmd({
-                "axis": kb_config["axis"],
                 "height": 30,
-                "keyboard": kb,
+                "keyboard": lkrb_kb,
                 "block_namespace": "minecraft:redstone_block",
                 "block_datavalue": 0
             })
         })
     }
-    for i in range(1, 5 + 1):
+    for i in range(1, 6 + 1):
         t= floor((i-1) / 2)
         if i % 2 == 0:
             adv_config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
@@ -82,4 +97,12 @@ if __name__ == "__main__":
         # adv_config["pbgen"]["config"]["bgen"]["config"]["block_namespace"] = "coloredredstone:colored_redstone_block"
         # adv_config["pbgen"]["config"]["bgen"]["config"]["block_datavalue"] = i - 1
         adv_config["midi"]["msg_gen"]["track"] = i + 1
-        rmg.Advancing(adv_config).generate()
+
+        if i == 6:
+            adv_config["pbgen"] = rmg.SmartAround({**adv_config["pbgen"].config, 
+                                                   "bgen": rmg.StaticFallCmd({**adv_config["pbgen"].config["bgen"].config,
+                                                                              "keyboard": drum_kb
+                                                                             })
+                                                 })
+
+        rmg.Snake(adv_config).generate()

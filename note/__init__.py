@@ -6,7 +6,6 @@ from mcpi import block
 import rmg
 
 drum_mapping = {
-    35: ("basedrum", 1),
     36: ("basedrum", 1),
     38: ("snare", 1),
     40: ("snare", 1.25),

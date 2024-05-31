@@ -43,7 +43,7 @@ class Advancing(ConfigLike):
     def generate(self) -> None:
         note_axis = Axis(self.axis.l2g(Vec3(-2, 0, 0)), self.axis.fwd_facing, self.axis.left_facing) if self.is_mini else deepcopy(self.axis)
         if self.is_gen_base == True:
-            for i in range(0, floor(self.length * self.upb / self.width)):
+            for i in range(0, ceil(self.length * self.upb / self.width)):
                 z = i * self.fwd
                 for x in range(1, self.width * 2 + 1):
                     if(self.is_mini and x == 1):
