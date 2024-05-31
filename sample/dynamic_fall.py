@@ -38,7 +38,10 @@ if __name__ == "__main__":
             "unit_per_beat": 4,
             "dlt_per_unit": Vec3(0, 0, 1), # Be careful of conflicts
             "magnet": True,
-            "bgen": (lkrb.LkrbCmd, {})
+            "pbgen": (rmg.KeyboardKey, {
+                "facing": player_axis_rhs(mc).fwd_facing,
+                "bgen": (lkrb.LkrbCmd, {})
+            })
         }
         lkrb_kb = rmg.DynamicKeyboard(lkrb_kb_config)
         
@@ -85,8 +88,8 @@ if __name__ == "__main__":
             adv_config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
         else:
             adv_config["axis"] = player_axis_rhs(mc, Vec3(2, t * 4, 1))
-        adv_config["pbgen"][1]["bgen"][1]["block_namespace"] = "coloredredstone:colored_redstone_block"
-        adv_config["pbgen"][1]["bgen"][1]["block_datavalue"] = i - 1
+        # adv_config["pbgen"][1]["bgen"][1]["block_namespace"] = "coloredredstone:colored_redstone_block"
+        # adv_config["pbgen"][1]["bgen"][1]["block_datavalue"] = i - 1
         adv_config["midi"]["msg_gen"]["track"] = i + 1
 
         rmg.Advancing(adv_config).generate()

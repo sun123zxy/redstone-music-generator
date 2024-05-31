@@ -13,6 +13,27 @@ from utils.midi_handler import MIDIHandler
 
 import rmg
 
+class KeyboardKey(rmg.PBgen):
+    def __init__(self, config: dict) -> None:
+        super().__init__(config)
+
+        self.facing = config["facing"]    
+
+        bgen, bgen_config = config["bgen"]
+        self.bgen = bgen(bgen_config)
+
+    def pbgen(self, beat: Fraction, msglst: list) -> list:
+        output = []
+        msg = msglst[0]
+        blk = self.bgen.bgen(None, msg)
+        output.append((Vec3(0,-1,0), blk))
+
+        blk = deepcopy(block.COMMAND_BLOCK)
+        dv = direction.facing2vec(direction.turn_back(self.facing))
+        blk.nbt = '{Command: "/setblock ~' + str(dv.x) +  ' ~' + str(dv.y) + ' ~' + str(dv.z) + ' minecraft:air"}'
+        output.append((Vec3(0,0,1), blk))
+        return output
+
 class StaticKeyboard(rmg.Axgen):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
@@ -29,12 +50,12 @@ class StaticKeyboard(rmg.Axgen):
         self.forces = self.force2vel.keys()
         self.force_dlt:Vec3 = config["force_dlt"]
 
-        bgen, bgen_config = config["bgen"]
-        self.bgen: rmg.Bgen = bgen(bgen_config)
+        pbgen, pbgen_config = config["pbgen"]
+        self.pbgen: rmg.PBgen = pbgen(pbgen_config)
     
     def _axgen_by_nid_and_force(self, nid, force) -> Axis:
         my_axis = Axis(self.axis.l2g(self.force_dlt * force), self.axis.fwd_facing)
-        return Axis(my_axis.l2g(Vec3(nid, 1, 0)), my_axis.fwd_facing)
+        return Axis(my_axis.l2g(Vec3(nid, 0, 0)), my_axis.fwd_facing)
 
     def axgen(self, beat: Fraction, msg: tuple) -> Axis:
         type, note, velocity, program_id = msg
@@ -43,16 +64,10 @@ class StaticKeyboard(rmg.Axgen):
     def generate(self) -> None:
         for force in self.forces:
             velocity = self.force2vel[force]
-            for i, note in enumerate(self.notes):
+            for note in self.notes:
                 ax = self.axgen(0, (None, note, velocity, None))
-
-                blk = self.bgen.bgen(None, ("note_on", note, velocity, None))
-                self.mc.setBlockWithNBT(ax.l2g(Vec3(0,-1,0)), blk)
-                
-                blk = deepcopy(block.COMMAND_BLOCK)
-                dv = direction.facing2vec(ax.back_facing)
-                blk.nbt = '{Command: "/setblock ~' + str(dv.x) +  ' ~' + str(dv.y) + ' ~' + str(dv.z) + ' minecraft:air"}'
-                self.mc.setBlockWithNBT(ax.l2g(Vec3(0,0,1)), blk)
+                for pos, blk in self.pbgen.pbgen(0, [(None, note, velocity, None)]):
+                    self.mc.setBlockWithNBT(ax.l2g(pos), blk)
         print("<<< Static Keyboard generated <<<")
 
 class DynamicKeyboard(rmg.Axgen):
@@ -73,26 +88,20 @@ class DynamicKeyboard(rmg.Axgen):
         self.dlt: Vec3 = config["dlt_per_unit"]
         self.magnet: bool = config["magnet"]
 
-        bgen, bgen_config = config["bgen"]
-        self.bgen: rmg.Bgen = bgen(bgen_config)
+        pbgen, pbgen_config = config["pbgen"]
+        self.pbgen: rmg.PBgen = pbgen(pbgen_config)
     
     def axgen(self, beat: Fraction, msg: tuple) -> Axis:
         type, note, velocity, program_id = msg
-        return Axis(self.axis.l2g(Vec3(self.note2id[note], 1, 0) + self.dlt * floor(beat * self.upb)), self.axis.fwd_facing)
+        return Axis(self.axis.l2g(Vec3(self.note2id[note], 0, 0) + self.dlt * floor(beat * self.upb)), self.axis.fwd_facing)
 
     def generate(self) -> None:
-        for beat, lst in self.midihan.msg_gen(self.msg_gen_config):
+        for beat, msglst in self.midihan.msg_gen(self.msg_gen_config):
             if self.magnet == True:
                 beat = beat.limit_denominator(self.upb)
 
-            for msg in lst:
+            for msg in msglst:
                 ax = self.axgen(beat, msg)
-
-                blk = self.bgen.bgen(None, msg)
-                self.mc.setBlockWithNBT(ax.l2g(Vec3(0,-1,0)), blk)
-
-                blk = deepcopy(block.COMMAND_BLOCK)
-                dv = direction.facing2vec(ax.back_facing)
-                blk.nbt = '{Command: "/setblock ~' + str(dv.x) +  ' ~' + str(dv.y) + ' ~' + str(dv.z) + ' minecraft:air"}'
-                self.mc.setBlockWithNBT(ax.l2g(Vec3(0,0,1)), blk)
+                for pos, blk in self.pbgen.pbgen(0, [msg]):
+                    self.mc.setBlockWithNBT(ax.l2g(pos), blk)
         print("<<< Dynamic Keyboard generated <<<")

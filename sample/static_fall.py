@@ -22,7 +22,10 @@ if __name__ == "__main__":
         "notes": list(range(21,109)),
         "vel2force": {v : lkrb.vel2force(127 - v) for v in range(0, 128)},
         "force_dlt": Vec3(0, 2, 4),
-        "bgen": (lkrb.LkrbCmd, {})
+        "pbgen": (rmg.KeyboardKey, {
+            "facing": player_axis_rhs(mc).fwd_facing,
+            "bgen": (lkrb.LkrbCmd, {})
+        })
     }
     lkrb_kb = rmg.StaticKeyboard(lkrb_kb_config)
     
@@ -37,7 +40,10 @@ if __name__ == "__main__":
         "vel2force": {**{v : 0 for v in range(0, 32)}, **{v : 1 for v in range(32, 64)}, **{v : 2 for v in range(64, 96)}, **{v : 3 for v in range(96, 128)}},
         "force2vel": {0: 16, 1: 48, 2: 80, 3: 112},
         "force_dlt": Vec3(0, 0, 3),
-        "bgen": (note.NoteDrumCmd, {"vel_factor": 0.8})
+        "pbgen": (rmg.KeyboardKey, {
+            "facing": player_axis_rhs(mc).fwd_facing,
+            "bgen": (note.NoteDrumCmd, {"vel_factor": 0.8})
+        })
     }
     drum_kb = rmg.StaticKeyboard(drum_kb_config)
 
