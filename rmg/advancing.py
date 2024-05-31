@@ -38,7 +38,8 @@ class Advancing(ConfigLike):
             self.pad_block: block.Block = config["base"]["pad_block"]
             self.base_block: block.Block = config["base"]["base_block"]
         
-        self.pbgen: rmg.Pbgen = config["pbgen"]
+        pbgen, pbgen_config = config["pbgen"]
+        self.pbgen: rmg.Pbgen = pbgen(pbgen_config)
     
     def generate(self) -> None:
         note_axis = Axis(self.axis.l2g(Vec3(-2, 0, 0)), self.axis.fwd_facing, self.axis.left_facing) if self.is_mini else deepcopy(self.axis)

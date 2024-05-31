@@ -36,7 +36,8 @@ class Snake(ConfigLike):
             self.pad_block: block.Block = config["base"]["pad_block"]
             self.base_block: block.Block = config["base"]["base_block"]
         
-        self.pbgen: rmg.Pbgen = config["pbgen"]
+        pbgen, pbgen_config = config["pbgen"]
+        self.pbgen: rmg.Pbgen = pbgen(pbgen_config)
     
     def generate(self) -> None:
         if self.is_gen_base == True:

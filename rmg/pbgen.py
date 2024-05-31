@@ -8,6 +8,8 @@ from mcpi.vec3 import Vec3
 
 from utils.config import ConfigLike
 
+import rmg
+
 class Pbgen(ConfigLike):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
@@ -26,7 +28,9 @@ class SmartAround(Pbgen):
 
         self.dlt:list = config["dlt"]
         self.ignore_out_of_range:bool = config.get("ignore_out_of_range")
-        self.bgen:Bgen = config["bgen"]
+
+        bgen, bgen_config = config["bgen"]
+        self.bgen: rmg.Bgen = bgen(bgen_config)
 
     def pbgen(self, beat, lst: list, check = lambda: True) -> list:
         super().pbgen(beat, lst)

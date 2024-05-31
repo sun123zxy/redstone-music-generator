@@ -35,7 +35,8 @@ class StaticKeyboard(Keyboard):
         self.forces = self.force2vel.keys()
         self.force_dlt:Vec3 = config["force_dlt"]
 
-        self.bgen:rmg.Bgen = config["bgen"]
+        bgen, bgen_config = config["bgen"]
+        self.bgen: rmg.Bgen = bgen(bgen_config)
     
     def _place_axis_by_nid_and_force(self, nid, force) -> Axis:
         my_axis = Axis(self.axis.l2g(self.force_dlt * force), self.axis.fwd_facing)

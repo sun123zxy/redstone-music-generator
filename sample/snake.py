@@ -18,7 +18,7 @@ if __name__ == "__main__":
             "handler": midihan,
             "msg_gen":{
                 "track": 2 + 1,
-                "st_beat": 53 * 4,
+                "st_beat": None,
                 "ed_beat": None,
                 "type_switch":{
                     "note_on": True,
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         "width": 32,
         "fwd": 3,
         "magnet": True,
-        "pbgen": rmg.SmartAround({
+        "pbgen": (rmg.SmartAround, {
             "dlt":  [(Vec3(0, 1, 0), True), 
                      (Vec3(0, 0, 1), False),
                      (Vec3(0, 0, -1), False), 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
                      (Vec3(0, 0, 0), True),
                      (Vec3(0, -1, 0), True)],
             "ignore_out_of_range": False,
-            "bgen": lkrb.LkrbCmd({})
+            "bgen": (lkrb.LkrbCmd, {})
         })
     }
     for i in range(1, 6 + 1):
@@ -59,6 +59,6 @@ if __name__ == "__main__":
         config["midi"]["msg_gen"]["track"] = i + 1
         
         if i == 6:
-            config["pbgen"] = rmg.SmartAround({**config["pbgen"].config, "bgen": note.NoteDrumCmd({"vel_factor": 0.8})})
+            config["pbgen"][1]["bgen"] = (note.NoteDrumCmd, {"vel_factor": 0.8})
         
         rmg.Snake(config).generate()
