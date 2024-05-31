@@ -25,7 +25,7 @@ class KeyboardKey(rmg.PBgen):
     def pbgen(self, beat: Fraction, msglst: list) -> list:
         output = []
         msg = msglst[0]
-        blk = self.bgen.bgen(None, msg)
+        blk = self.bgen.bgen(beat, msg)
         output.append((Vec3(0,-1,0), blk))
 
         blk = deepcopy(block.COMMAND_BLOCK)
@@ -54,8 +54,7 @@ class StaticKeyboard(rmg.Axgen):
         self.pbgen: rmg.PBgen = pbgen(pbgen_config)
     
     def _axgen_by_nid_and_force(self, nid, force) -> Axis:
-        my_axis = Axis(self.axis.l2g(self.force_dlt * force), self.axis.fwd_facing)
-        return Axis(my_axis.l2g(Vec3(nid, 0, 0)), my_axis.fwd_facing)
+        return Axis(self.axis.l2g(Vec3(nid, 0, 0) + self.force_dlt * force), self.axis.fwd_facing, self.axis.left_facing)
 
     def axgen(self, beat: Fraction, msg: tuple) -> Axis:
         type, note, velocity, program_id = msg
@@ -65,8 +64,9 @@ class StaticKeyboard(rmg.Axgen):
         for force in self.forces:
             velocity = self.force2vel[force]
             for note in self.notes:
-                ax = self.axgen(0, (None, note, velocity, None))
-                for pos, blk in self.pbgen.pbgen(0, [(None, note, velocity, None)]):
+                msg = ("note_on", note, velocity, 0)
+                ax = self.axgen(0, msg)
+                for pos, blk in self.pbgen.pbgen(0, [msg]):
                     self.mc.setBlockWithNBT(ax.l2g(pos), blk)
         print("<<< Static Keyboard generated <<<")
 
@@ -93,7 +93,7 @@ class DynamicKeyboard(rmg.Axgen):
     
     def axgen(self, beat: Fraction, msg: tuple) -> Axis:
         type, note, velocity, program_id = msg
-        return Axis(self.axis.l2g(Vec3(self.note2id[note], 0, 0) + self.dlt * floor(beat * self.upb)), self.axis.fwd_facing)
+        return Axis(self.axis.l2g(Vec3(self.note2id[note], 0, 0) + self.dlt * floor(beat * self.upb)), self.axis.fwd_facing, self.axis.left_facing)
 
     def generate(self) -> None:
         for beat, msglst in self.midihan.msg_gen(self.msg_gen_config):

@@ -16,8 +16,8 @@ if __name__ == "__main__":
     mc = Minecraft()
     midihan = MIDIHandler("my_script/music.mid")
     
-    for i in range(4,4+1):
-    # for i in range(1, 5 + 1):
+    # for i in range(1,2+1):
+    for i in range(1, 5 + 1):
 
         lkrb_kb_config = {
             "midi":{
@@ -36,7 +36,7 @@ if __name__ == "__main__":
             "axis": player_axis_rhs(mc),
             "notes": list(range(21,109)),
             "unit_per_beat": 4,
-            "dlt_per_unit": Vec3(0, 0, 1), # Be careful of conflicts
+            "dlt_per_unit": Vec3(0, 0, 2), # Be careful of conflicts
             "magnet": True,
             "pbgen": (rmg.KeyboardKey, {
                 "facing": player_axis_rhs(mc).fwd_facing,
@@ -62,7 +62,7 @@ if __name__ == "__main__":
             "axis": player_axis_lhs(mc, Vec3(0, 0, 1)),
             "unit_per_beat": 4,
             "width": 4,
-            "fwd": 4,
+            "fwd": 8,
             "magnet": True,
             "mini": False,
             "pbgen": (rmg.SmartAround, {
@@ -75,7 +75,7 @@ if __name__ == "__main__":
                         (Vec3(0, -1, 0), True)],
                 "ignore_out_of_range": False,
                 "bgen": (rmg.FallCmd, {
-                    "height": 15,
+                    "height": 30,
                     "axgen": lkrb_kb,
                     "block_namespace": "minecraft:redstone_block",
                     "block_datavalue": 0
