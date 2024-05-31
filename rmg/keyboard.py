@@ -22,26 +22,30 @@ class StaticKeyboard(Keyboard):
     def __init__(self, config: dict) -> None:
         self.mc:Minecraft = config["mc"]
         self.axis:Axis = config["axis"]
-        print("Notice! Keyboard will generate by axis:", self.axis)
+        print("Keyboard will generate by axis:", self.axis)
 
         self.notes:list = config["notes"]
+        self.note2id = {note: i for i, note in enumerate(self.notes)}
 
-        self.vel2force:function = config["vel2force"]
-        self.force2vel:function = config["force2vel"]
-        self.force_num = config["force_num"]
-        self.force_dlt = config["force_dlt"]
+        self.vel2force:dict = config["vel2force"]
+        self.force2vel = {f: v for v, f in self.vel2force.items()}
+        self.forces = self.vel2force.values()
+        self.force_dlt:Vec3 = config["force_dlt"]
 
         self.bgen:rmg.Bgen = config["bgen"]
     
+    def _place_axis_by_nid_and_force(self, nid, force) -> Axis:
+        my_axis = Axis(self.axis.l2g(self.force_dlt * force), self.axis.fwd_facing)
+        return Axis(my_axis.l2g(Vec3(nid, 1, 0)), my_axis.fwd_facing)
+
     def place_axis(self, beat: Fraction, msg: tuple) -> Axis:
         type, note, velocity, program_id = msg
-        my_axis = Axis(self.axis.l2g(self.force_dlt * self.vel2force(velocity)), self.axis.fwd_facing)
-        return Axis(my_axis.l2g(Vec3(note, 1, 0)), my_axis.fwd_facing)
+        return self._place_axis_by_nid_and_force(self.note2id[note], self.vel2force[velocity])
 
     def generate(self) -> None:
-        for force in set(map(self.vel2force, range(0, 128))):
-            velocity = self.force2vel(force)
-            for note in self.notes:
+        for force in self.forces:
+            velocity = self.force2vel[force]
+            for i, note in enumerate(self.notes):
                 blk = self.bgen.bgen(None, ("note_on", note, velocity, None))
                 self.mc.setBlockWithNBT(self.place_axis(0, (None, note, velocity, None)).l2g(Vec3(0,0,1)), blk)
                 

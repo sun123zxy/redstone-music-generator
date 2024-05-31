@@ -16,8 +16,6 @@ def force2str(force: int) -> str:
         elif force == 7: return "fff"
         else: return None
 
-force_num = 8
-
 def vel2force(velocity: int) -> int:
         return floor(velocity / 16)
 def force2vel(force: int) -> int:
