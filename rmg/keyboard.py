@@ -8,6 +8,7 @@ from mcpi import block
 
 from utils.axis import Axis
 from utils.config import ConfigLike
+from utils import direction
 
 import rmg
 
@@ -52,10 +53,13 @@ class StaticKeyboard(Keyboard):
         for force in self.forces:
             velocity = self.force2vel[force]
             for i, note in enumerate(self.notes):
+                ax = self.place_axis(0, (None, note, velocity, None))
+
                 blk = self.bgen.bgen(None, ("note_on", note, velocity, None))
-                self.mc.setBlockWithNBT(self.place_axis(0, (None, note, velocity, None)).l2g(Vec3(0,0,1)), blk)
+                self.mc.setBlockWithNBT(ax.l2g(Vec3(0,-1,0)), blk)
                 
                 blk = deepcopy(block.COMMAND_BLOCK)
-                blk.nbt = '{Command: "/setblock ~ ~1 ~ minecraft:air"}'
-                self.mc.setBlockWithNBT(self.place_axis(0, (None, note, velocity, None)).l2g(Vec3(0,-1,0)), blk)
+                dlt = direction.facing2vec(ax.back_facing)
+                blk.nbt = '{Command: "/setblock ~' + str(dlt.x) +  ' ~' + str(dlt.y) + ' ~' + str(dlt.z) + ' minecraft:air"}'
+                self.mc.setBlockWithNBT(self.place_axis(0, (None, note, velocity, None)).l2g(Vec3(0,0,1)), blk)
         print("<<< keyboard generated <<<")
