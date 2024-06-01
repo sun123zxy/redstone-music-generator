@@ -13,26 +13,28 @@ from utils.midi_handler import MIDIHandler
 
 import rmg
 
-class KeyboardKey(rmg.PBgen):
+class CompactKey(rmg.PBgen):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
-
-        self.facing = config["facing"]    
 
         bgen, bgen_config = config["bgen"]
         self.bgen = bgen(bgen_config)
 
     def pbgen(self, beat: Fraction, msglst: list) -> list:
-        output = []
-        msg = msglst[0]
-        blk = self.bgen.bgen(beat, msg)
-        output.append((Vec3(0,-1,0), blk))
+        return [(Vec3(0,-1,0), self.bgen.bgen(beat, msglst[0])),
+                (Vec3(0,-2,0), block.Block(211, 0, '{auto:1, Command: "/setblock ~ ~2 ~ minecraft:air"}'))]
 
-        blk = deepcopy(block.COMMAND_BLOCK)
+class KeyboardKey(rmg.PBgen):
+    def __init__(self, config: dict) -> None:
+        super().__init__(config)
+
+        bgen, bgen_config = config["bgen"]
+        self.bgen = bgen(bgen_config)
+
+    def pbgen(self, beat: Fraction, msglst: list) -> list:
         dv = direction.facing2vec(direction.turn_back(self.facing))
-        blk.nbt = '{Command: "/setblock ~' + str(dv.x) +  ' ~' + str(dv.y) + ' ~' + str(dv.z) + ' minecraft:air"}'
-        output.append((Vec3(0,0,1), blk))
-        return output
+        return [(Vec3(0,-1,0), self.bgen.bgen(beat, msglst[0])),
+                (Vec3(0, 0,1), block.Block(137, 0, '{Command: "/setblock ~' + str(dv.x) +  ' ~' + str(dv.y) + ' ~' + str(dv.z) + ' minecraft:air"}'))]
 
 class StaticKeyboard(rmg.Axgen):
     def __init__(self, config: dict) -> None:
@@ -81,7 +83,10 @@ class DynamicKeyboard(rmg.Axgen):
         self.axis:Axis = config["axis"]
         print("Dynamic Keyboard will generate by axis:", self.axis)
 
-        self.notes:list = config["notes"]
+        if config["notes"] == "auto":
+            self.notes = list(set(note for beat, msglst in self.midihan.msg_gen(self.msg_gen_config) for type, note, velocity, program_id in msglst))
+        else:
+            self.notes:list = config["notes"]
         self.note2id = {note: i for i, note in enumerate(self.notes)}
         
         self.upb: Fraction = config["unit_per_beat"]

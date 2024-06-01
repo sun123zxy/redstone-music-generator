@@ -10,7 +10,7 @@ import rmg
 from utils.midi_handler import MIDIHandler
 from utils.axis import Axis, player_axis_lhs, player_axis_rhs
 
-import rmg, lkrb, note
+import rmg, lkrb
 
 if __name__ == "__main__":
     mc = Minecraft()
@@ -36,9 +36,9 @@ if __name__ == "__main__":
             "axis": player_axis_rhs(mc),
             "notes": list(range(21,109)),
             "unit_per_beat": 4,
-            "dlt_per_unit": Vec3(0, 0, 2), # Be careful of conflicts
+            "dlt_per_unit": Vec3(0, 0, 1),
             "magnet": True,
-            "pbgen": (rmg.KeyboardKey, {
+            "pbgen": (rmg.CompactKey, {
                 "facing": player_axis_rhs(mc).fwd_facing,
                 "bgen": (lkrb.LkrbCmd, {})
             })
@@ -62,7 +62,7 @@ if __name__ == "__main__":
             "axis": player_axis_lhs(mc, Vec3(0, 0, 1)),
             "unit_per_beat": 4,
             "width": 4,
-            "fwd": 8,
+            "fwd": 4,
             "magnet": True,
             "mini": False,
             "pbgen": (rmg.SmartAround, {
@@ -75,7 +75,7 @@ if __name__ == "__main__":
                         (Vec3(0, -1, 0), True)],
                 "ignore_out_of_range": False,
                 "bgen": (rmg.FallCmd, {
-                    "height": 30,
+                    "height": 5,
                     "axgen": lkrb_kb,
                     "block_namespace": "minecraft:redstone_block",
                     "block_datavalue": 0
