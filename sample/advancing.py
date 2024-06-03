@@ -51,7 +51,7 @@ if __name__ == "__main__":
             "bgen": (lkrb.LkrbCmd, {})
         })
     }
-    for i in range(1, 6 + 1):
+    for i in range(1, 7 + 1):
         t= floor((i-1) / 2)
         if i % 2 == 0:
             config["axis"] = player_axis_lhs(mc, Vec3(2, t * 4, 1))
@@ -60,6 +60,8 @@ if __name__ == "__main__":
         config["midi"]["msg_gen"]["track"] = i + 1
         
         if i == 6:
-            config["pbgen"][1]["bgen"] = (note.NoteDrumCmd, {"vel_factor": 0.8})
+            config["pbgen"][1]["bgen"] = (note.NoteDrumCmd, {"max_vol": 0.8})
+        elif i == 7:
+            config["pbgen"][1]["bgen"] = (note.NoteCmd, {"name": "block.anvil.land", "std_note": 76, "max_vol": 0.5})
         
         rmg.Advancing(config).generate()

@@ -42,7 +42,7 @@ if __name__ == "__main__":
         "force_dlt": Vec3(0, 0, 3),
         "pbgen": (rmg.KeyboardKey, {
             "facing": player_axis_rhs(mc).fwd_facing,
-            "bgen": (note.NoteDrumCmd, {"vel_factor": 0.8})
+            "bgen": (note.NoteDrumCmd, {"max_vol": 0.8})
         })
     }
     drum_kb = rmg.StaticKeyboard(drum_kb_config)
