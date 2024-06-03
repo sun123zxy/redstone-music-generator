@@ -60,7 +60,7 @@ class Snake(ConfigLike):
                             block.REDSTONE_REPEATER_INACTIVE.id,
                             (self.tpr - 1) * 4 + turn_back(self.axis.fwd_facing))
 
-        for beat, lst in self.midihan.msg_gen(self.msg_gen_config):
+        for beat, msgs in self.midihan.msg_gen(self.msg_gen_config):
             if self.magnet == True:
                 beat = beat.limit_denominator(self.upb)
 
@@ -75,8 +75,6 @@ class Snake(ConfigLike):
 
             def is_free(pos: Vec3) -> bool:
                 return self.mc.getBlock(my_axis.l2g(pos)) == block.AIR.id
-            pblst = self.pbgen.pbgen(beat, lst, is_free)
-
-            for pos, blk in pblst:
-                self.mc.setBlockWithNBT(my_axis.l2g(pos), blk)
+            
+            self.pbgen.generates(self.mc, my_axis, beat, msgs, is_free)
         print("<<< snake generated <<<")

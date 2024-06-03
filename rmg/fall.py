@@ -25,8 +25,6 @@ class FallCmd(rmg.Bgen):
         self.mcpi_offset:Vec3 = Vec3(0, 0, 0) if config.get("mcpi_offset") == None else config.get("mcpi_offset")
 
     def bgen(self, beat, msg: tuple) -> list:
-        super().bgen(beat, msg)
-
         type, note, velocity, porgram_id = msg
         pos = self.mcpi_offset + self.pgen.pgen(beat, msg) + Vec3(0, self.height, 0)
         blk = deepcopy(block.COMMAND_BLOCK)

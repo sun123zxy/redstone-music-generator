@@ -3,6 +3,7 @@ from fractions import Fraction
 
 import mido
 
+from mcpi.minecraft import Minecraft
 from mcpi import block
 from mcpi.vec3 import Vec3
 
@@ -14,8 +15,19 @@ import rmg
 class PBgen(ConfigLike):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
-    def pbgen(self, beat: Fraction, msglst: list) -> list:
+    def pbgen(self, beat: Fraction, msg) -> list: # of (Vec3, block.Block)
         pass
+    def pbgens(self, beat: Fraction, msgs) -> list:
+        op = []
+        for msg in msgs:
+            op += self.pbgen(beat, msg)
+        return op
+    def generate(self, mc: Minecraft, axis: Axis, *args) -> list:
+        for pos, blk in self.pbgen(*args):
+            mc.setBlockWithNBT(axis.l2g(pos), blk)
+    def generates(self, mc: Minecraft, axis: Axis, *args) -> list:
+        for pos, blk in self.pbgens(*args):
+            mc.setBlockWithNBT(axis.l2g(pos), blk)
 
 class Pgen(ConfigLike):
     def __init__(self, config: dict) -> None:
@@ -28,8 +40,8 @@ class Axgen(Pgen):
         super().__init__(config)
     def axgen(self, beat: Fraction, msg: tuple) -> Axis:
         pass
-    def pgen(self, beat: Fraction, msg: tuple) -> Vec3:
-        return self.axgen(beat, msg).origin
+    def pgen(self, *args) -> Vec3:
+        return self.axgen(*args).origin
 
 class Bgen(ConfigLike):
     def __init__(self, config: dict) -> None:
@@ -47,10 +59,10 @@ class SmartAround(PBgen):
         bgen, bgen_config = config["bgen"]
         self.bgen: rmg.Bgen = bgen(bgen_config)
 
-    def pbgen(self, beat, lst: list, check = lambda: True) -> list:
+    def pbgens(self, beat, msgs, check = lambda: True) -> list:
         cnt = 0
         output = []
-        for type, note, velocity, program_id in lst:
+        for type, note, velocity, program_id in msgs:
             blk = self.bgen.bgen(beat, (type, note, velocity, program_id))
             while True:
                 if cnt >= len(self.dlt):

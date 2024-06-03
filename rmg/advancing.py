@@ -43,6 +43,7 @@ class Advancing(ConfigLike):
     
     def generate(self) -> None:
         note_axis = Axis(self.axis.l2g(Vec3(-2, 0, 0)), self.axis.fwd_facing, self.axis.left_facing) if self.is_mini else deepcopy(self.axis)
+        
         if self.is_gen_base == True:
             for i in range(0, ceil(self.length * self.upb / self.width)):
                 z = i * self.fwd
@@ -74,7 +75,7 @@ class Advancing(ConfigLike):
                         self.mc.setBlockWithNBT(self.axis.l2g(Vec3(0, 1, z + dz)), 55)
                     ret -= 4
 
-        for beat, lst in self.midihan.msg_gen(self.msg_gen_config):
+        for beat, msgs in self.midihan.msg_gen(self.msg_gen_config):
             if self.magnet == True:
                 beat = beat.limit_denominator(self.upb)
 
@@ -88,8 +89,5 @@ class Advancing(ConfigLike):
 
             def is_free(pos: Vec3) -> bool:
                 return self.mc.getBlock(your_axis.l2g(pos)) == block.AIR.id
-            pblst = self.pbgen.pbgen(beat, lst, is_free)
-            
-            for pos, blk in pblst:
-                self.mc.setBlockWithNBT(your_axis.l2g(pos), blk)
+            self.pbgen.generates(self.mc, your_axis, beat, msgs, is_free)
         print("<<< advancing generated <<<")

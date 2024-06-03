@@ -20,20 +20,20 @@ class CompactKey(rmg.PBgen):
         bgen, bgen_config = config["bgen"]
         self.bgen = bgen(bgen_config)
 
-    def pbgen(self, beat: Fraction, msglst: list) -> list:
-        return [(Vec3(0,-1,0), self.bgen.bgen(beat, msglst[0])),
+    def pbgen(self, beat: Fraction, msg) -> list:
+        return [(Vec3(0,-1,0), self.bgen.bgen(beat, msg)),
                 (Vec3(0,-2,0), block.Block(211, 0, '{auto:1, Command: "/setblock ~ ~2 ~ minecraft:air"}'))]
 
 class KeyboardKey(rmg.PBgen):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
-
+        self.facing = config["facing"]
         bgen, bgen_config = config["bgen"]
         self.bgen = bgen(bgen_config)
 
-    def pbgen(self, beat: Fraction, msglst: list) -> list:
+    def pbgen(self, beat: Fraction, msg) -> list:
         dv = direction.facing2vec(direction.turn_back(self.facing))
-        return [(Vec3(0,-1,0), self.bgen.bgen(beat, msglst[0])),
+        return [(Vec3(0,-1,0), self.bgen.bgen(beat, msg)),
                 (Vec3(0, 0,1), block.Block(137, 0, '{Command: "/setblock ~' + str(dv.x) +  ' ~' + str(dv.y) + ' ~' + str(dv.z) + ' minecraft:air"}'))]
 
 class StaticKeyboard(rmg.Axgen):
@@ -68,8 +68,7 @@ class StaticKeyboard(rmg.Axgen):
             for note in self.notes:
                 msg = ("note_on", note, velocity, 0)
                 ax = self.axgen(0, msg)
-                for pos, blk in self.pbgen.pbgen(0, [msg]):
-                    self.mc.setBlockWithNBT(ax.l2g(pos), blk)
+                self.pbgen.generate(self.mc, ax, 0, msg)
         print("<<< Static Keyboard generated <<<")
 
 class DynamicKeyboard(rmg.Axgen):
@@ -101,12 +100,11 @@ class DynamicKeyboard(rmg.Axgen):
         return Axis(self.axis.l2g(Vec3(self.note2id[note], 0, 0) + self.dlt * floor(beat * self.upb)), self.axis.fwd_facing, self.axis.left_facing)
 
     def generate(self) -> None:
-        for beat, msglst in self.midihan.msg_gen(self.msg_gen_config):
+        for beat, msgs in self.midihan.msg_gen(self.msg_gen_config):
             if self.magnet == True:
                 beat = beat.limit_denominator(self.upb)
 
-            for msg in msglst:
+            for msg in msgs:
                 ax = self.axgen(beat, msg)
-                for pos, blk in self.pbgen.pbgen(0, [msg]):
-                    self.mc.setBlockWithNBT(ax.l2g(pos), blk)
+                self.pbgen.generate(self.mc, ax, 0, msg)
         print("<<< Dynamic Keyboard generated <<<")
