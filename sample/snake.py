@@ -61,6 +61,6 @@ if __name__ == "__main__":
         if i == 6:
             config["pbgen"][1]["bgen"] = (note.NoteDrumCmd, {"max_vol": 0.8})
         elif i == 7:
-            config["pbgen"][1]["bgen"] = (note.NoteCmd, {"name": "block.anvil.land", "std_note": 76, "max_vol": 0.5})
+            config["pbgen"][1]["bgen"] = (note.NoteCmd, {"name": "block.anvil.land", "std_note": 76, "max_vol": 0.4})
         
         rmg.Snake(config).generate()
