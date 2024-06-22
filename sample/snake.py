@@ -18,7 +18,7 @@ if __name__ == "__main__":
             "handler": midihan,
             "msg_gen":{
                 "track": 2 + 1,
-                "st_beat": 53 * 4,
+                "st_beat": None,
                 "ed_beat": None,
                 "type_switch":{
                     "note_on": True,
@@ -33,12 +33,11 @@ if __name__ == "__main__":
             "pad_block": deepcopy(block.REDSTONE_LAMP_INACTIVE),
         },
         "mc": mc,
-        "axis": player_axis_lhs(mc, Vec3(0, 0, 1)),
+        "axis": player_axis_lhs(mc, Vec3(1, 0, 1)),
         "unit_per_beat": 4,
-        "width": 8,
+        "width": 32,
         "fwd": 3,
         "magnet": True,
-        "mini": False,
         "pbgen": (rmg.SmartAround, {
             "dlt":  [(Vec3(0, 1, 0), True), 
                      (Vec3(0, 0, 1), False),
@@ -64,4 +63,4 @@ if __name__ == "__main__":
         elif i == 7:
             config["pbgen"][1]["bgen"] = (note.NoteCmd, {"name": "block.anvil.land", "std_note": 76, "max_vol": 0.4})
         
-        rmg.Advancing(config).generate()
+        rmg.Snake(config).generate()
