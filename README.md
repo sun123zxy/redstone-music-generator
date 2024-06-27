@@ -23,3 +23,9 @@ Functionalities are packed as modules, so it is suggested to write your own scri
 ## Maintenance
 
 This project is developed mainly for personal usage. It may iterate fast. Maintenance is not guaranteed. Nevertheless, issues and pull requests are always welcome.
+
+## Q&A
+
+- `falling_block` coordinates not consistent with the generated keyboard
+  
+  see [Issue #4](https://github.com/sun123zxy/redstone-music-generator/issues/4).
