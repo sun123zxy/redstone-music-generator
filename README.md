@@ -4,7 +4,9 @@
 
 Automating building process of redstone music in Minecraft with Python scripts and MIDI files.
 
-This project is developed under Minecraft Java Edition 1.12.2, Python 3.8.3 and [Raspberry Jam Mod 0.94](https://github.com/arpruss/raspberryjammod/releases/tag/0.94). Python requirements are declared in `requirements.txt`. (Anyway I guess it is compatible with Minecraft 1.8 - 1.12.2 and any version of Python 3) 
+What this project aiming at is rather reminiscent of some old-fashioned command-block redstone music dating back 2016--2018, especially inspired by [1U_s' redstone music collection of Perfect Cherry Blossom](https://www.bilibili.com/video/BV1Gs411i7K9/). Check [here](https://www.bilibili.com/video/BV1KT421e7EF/) for a demo video.
+
+Developed under Minecraft Java Edition 1.12.2, Python 3.8.3 and [Raspberry Jam Mod 0.94](https://github.com/arpruss/raspberryjammod/releases/tag/0.94). Python requirements are declared in `requirements.txt`. (Anyway I guess it is compatible with Minecraft 1.8 - 1.12.2 and any version of Python 3)
 
 Note that the directory `mcpi/` is copied from the sample scripts in Raspberry Jam Mod directly.
 
@@ -22,7 +24,7 @@ Functionalities are packed as modules, so it is suggested to write your own scri
 
 ## Maintenance
 
-This project is developed mainly for personal usage. It may iterate fast. Maintenance is not guaranteed. Nevertheless, issues and pull requests are always welcome.
+This project is developed mainly for personal use. It may iterate fast (or do not iterate at all!). Maintenance is not guaranteed. Nevertheless, issues and pull requests are always welcome.
 
 ## Q&A
 
