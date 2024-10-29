@@ -13,14 +13,14 @@ Note that the directory `mcpi/` is copied from the sample scripts in Raspberry J
 ## Installation
 
 1. Install python (with pip) and Minecraft (with Forge) if you haven't done so yet.
-2. Install [Raspberry Jam Mod](https://github.com/arpruss/raspberryjammod) with [instructions](https://www.instructables.com/Python-coding-for-Minecraft/). However, you should keep `.minecaft/mcpipy/` empty, and not using the `.exe` installer is suggested.
-3. Copy all files of this repository into `.minecaft/mcpipy/`.
+2. Install [Raspberry Jam Mod](https://github.com/arpruss/raspberryjammod) with [instructions](https://www.instructables.com/Python-coding-for-Minecraft/). However, you should keep `.minecraft/mcpipy/` empty, and not using the `.exe` installer is suggested.
+3. Copy all files of this repository into `.minecraft/mcpipy/`.
 4. In `.minecraft/mcpipy/`, execute `pip install -r requirements.txt`.
 5. (optional) Install resourcepack `realpiano`, a sound resourcepack made by lkrb. ([offical page](http://lkrb.net/blog/54.html) (already invalid), you may download it [here](https://www.cr173.com/soft/277354.html))
 
 ## Start
 
-Functionalities are packed as modules, so it is suggested to write your own scripts to call them. Serveral sample scripts are provided in `sample/` for reference. For a quick start, with a Minecraft world running, you may execute `python -m sample.advancing` (for example) to run a sample script. Before that, a valid MIDI file should be placed at `my_script/music.mid`. Note that you should always execute commands in the root directory of this repository, running scripts as modules (with `python -m`).
+Functionalities are packed as modules, so it is suggested to write your own scripts to call them. Several sample scripts are provided in `sample/` for reference. For a quick start, with a Minecraft world running, you may execute `python -m sample.advancing` (for example) to run a sample script. Before that, a valid MIDI file should be placed at `my_script/music.mid`. Note that you should always execute commands in the root directory of this repository, running scripts as modules (with `python -m`).
 
 ## Maintenance
 
